@@ -5,6 +5,7 @@ import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
+import "./libraries/Base64.sol";
 
 contract Game is ERC721{
     
@@ -25,7 +26,7 @@ contract Game is ERC721{
     avatarAttributes[] defaultAvatar;
 
     mapping(uint256 => avatarAttributes) public nftHolderAttributes;
-    mapping(address => uint256) public nftHolders;
+    mapping(address => uint256[]) public nftHolders;
     
     constructor(
         string[] memory avatarNames,
@@ -68,7 +69,35 @@ contract Game is ERC721{
         });
         
         console.log("Minted NFT w/ tokenId %s and characterIndex %s", nftID, _index);
-        nftHolders[msg.sender] = nftID;
+        nftHolders[msg.sender].push(nftID);
         _tokenID.increment();
+    }
+
+    function tokenURI(uint256 _tokenID) public view override returns(string memory){
+        avatarAttributes memory avt = nftHolderAttributes[_tokenID];
+
+        string memory strHP = Strings.toString(avt.HP);
+        string memory strMaxHP = Strings.toString(avt.maxHP);
+        string memory strBA = Strings.toString(avt.baseAttack);
+        string memory strSA = Strings.toString(avt.specialAttack);
+
+        string memory JSON = Base64.encode(
+            abi.encodePacked(
+        '{"name": "',
+        avt.name,
+        ' -- NFT #: ',
+        Strings.toString(_tokenID),
+        '", "description": "The Last of Us based NFT. Defeat the Bloater!", "image": "',
+        avt.imgURL,
+        '", "attributes": [ { "trait_type": "Health Points", "value": ',strHP,', "maxValue":',strMaxHP,'}, { "trait_type": "Attack Damage", "baseAttack": ',
+        strBA,', "specialAttack":',strSA,'} ]}'
+        )
+    );
+
+        string memory output = string(
+            abi.encodePacked("data:application/json;base64,", JSON)
+        );
+
+        return output;
     }
 }
