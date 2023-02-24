@@ -20,21 +20,46 @@ contract Game is ERC721{
 
     }
 
+    struct Bloater{
+        string name;
+        string imgURL;
+        uint HP;
+        uint maxHP;
+        uint Attack;
+    }
+
     using Counters for Counters.Counter;
     Counters.Counter private _tokenID;
 
     avatarAttributes[] defaultAvatar;
+    Bloater public bloater;
 
     mapping(uint256 => avatarAttributes) public nftHolderAttributes;
     mapping(address => uint256[]) public nftHolders;
+
     
     constructor(
         string[] memory avatarNames,
         string[] memory avatarURL,
         uint[] memory avatarHP,
         uint[] memory avatarBaseAttack,
-        uint[] memory avatarSpcAttack
+        uint[] memory avatarSpcAttack,
+        string memory bloaterName,
+        string memory bloaterURL,
+        uint bloaterHP,
+        uint bloaterAttack
     ) ERC721("Fireflies", "FLY"){
+
+        bloater = Bloater({
+            name: bloaterName,
+            imgURL: bloaterURL,
+            HP: bloaterHP,
+            maxHP: bloaterHP,
+            Attack: bloaterAttack
+        });
+
+        console.log("done initialising %s w/ %s HP, %s Attack ", bloater.name, bloater.HP, bloater.Attack);
+
         for(uint i = 0; i< avatarNames.length; i++){
             defaultAvatar.push(avatarAttributes({
                 avatarIndex : i, 
@@ -99,5 +124,15 @@ contract Game is ERC721{
         );
 
         return output;
+    }
+
+    function attack() public view{
+
+        uint256 playerNFT = nftHolders[msg.sender][0]; // RETRIEVES FIRST NFT IN THE WALLET
+        avatarAttributes storage player = nftHolderAttributes[playerNFT];
+        console.log("\nplayer /w %s NFT has %s HP Left", player.name, player.HP);
+        console.log("%s has %s HP Left", bloater.name, bloater.HP);
+
+
     }
 }
