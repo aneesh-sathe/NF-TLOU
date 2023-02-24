@@ -147,18 +147,33 @@ contract Game is ERC721{
 
         if(bloater.HP < player.baseAttack){
             bloater.HP = 0;
+            console.log("Bloater slayed by %s!", player.name);
         } else {
-            bloater.HP = bloater.HP - player.baseAttack;
+            attackCount++;
+            if(attackCount % 3 == 0){
+                console.log("Special Attack Activated!");
+                bloater.HP = bloater.HP - player.specialAttack;
+                console.log("%s attacked Bloater! Bloater HP: %s", player.name, bloater.HP);
+            } else{
+                bloater.HP = bloater.HP - player.baseAttack;
+                console.log("%s attacked Bloater! Bloater HP: %s", player.name, bloater.HP);
+            }
         }
 
         if(player.HP < bloater.Attack){
             player.HP = 0;
+            console.log("Oh, No! %s got YEETED!", player.name);
+            console.log("Try Minting another Character?");
         } else{
-            player.HP = player.HP - bloater.Attack;
+            if(random(10) > 3){
+                console.log("Bloater Missed!");
+            } else{
+                player.HP = player.HP - bloater.Attack;  
+                console.log("Bloater attacked %s! %s HP: %s", player.name, player.name, player.HP);
+            }
+            
         }
 
-        console.log("%s attacked bloater! Bloater HP: %s", player.name, bloater.HP);
-        console.log("bloater attacked %s! %s HP: %s", player.name, player.name, player.HP);
 
 
     }

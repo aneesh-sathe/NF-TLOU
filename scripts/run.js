@@ -5,24 +5,30 @@ const main = async () => {
   const gameContract = await gameContractFactory.deploy(
     ["Joel", "Ellie", "Bill"],
     [process.env.JOEL, process.env.ELLIE, process.env.BILL],
-    [100, 100, 100],
-    [100, 100, 100],
-    [200, 200, 200],
+    [150, 300, 100],
+    [100, 50, 150],
+    [200, 100, 500],
     "Bloater",
     "https://imgur.com/a/fz4CU6X",
-    100000,
-    150
+    10000,
+    100
   ); // creates local instance of blockchain & deploys contract
   await gameContract.deployed();
 
   console.log("contract deployed to -> ", gameContract.address);
 
   let txn;
-  txn = await gameContract.mintNFT(0);
+  txn = await gameContract.mintNFT(2);
   await txn.wait();
 
   let returnTokenURI = await gameContract.tokenURI(1);
   console.log("TOKEN URI -> ", returnTokenURI);
+
+  txn = await gameContract.attack();
+  await txn.wait();
+
+  txn = await gameContract.attack();
+  await txn.wait();
 
   txn = await gameContract.attack();
   await txn.wait();
