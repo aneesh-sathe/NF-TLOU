@@ -16,7 +16,7 @@ contract Game is ERC721{
         uint HP;
         uint maxHP;
         uint baseAttack;
-        uint specialAttack;
+        uint specialAttack; // EVERY 3rd ATTACK IS A SPECIAL ATTACK 
 
     }
 
@@ -25,7 +25,7 @@ contract Game is ERC721{
         string imgURL;
         uint HP;
         uint maxHP;
-        uint Attack;
+        uint Attack; // 70% CHANCE THAT ATTACK WILL MISS DUE TO SLOW SPEED IN THE VIDEO GAME
     }
 
     using Counters for Counters.Counter;
@@ -36,6 +36,8 @@ contract Game is ERC721{
 
     mapping(uint256 => avatarAttributes) public nftHolderAttributes;
     mapping(address => uint256[]) public nftHolders;
+    uint flag = 0;
+    uint attackCount = 0;
 
     
     constructor(
@@ -124,6 +126,12 @@ contract Game is ERC721{
         );
 
         return output;
+    }
+
+    function random(uint _div) internal returns(uint){
+        flag++;
+        return uint(keccak256(abi.encodePacked(block.timestamp, block.gaslimit, flag ))) % _div;
+
     }
 
     function attack() public {
