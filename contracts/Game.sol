@@ -126,12 +126,31 @@ contract Game is ERC721{
         return output;
     }
 
-    function attack() public view{
+    function attack() public {
 
         uint256 playerNFT = nftHolders[msg.sender][0]; // RETRIEVES FIRST NFT IN THE WALLET
         avatarAttributes storage player = nftHolderAttributes[playerNFT];
         console.log("\nplayer /w %s NFT has %s HP Left", player.name, player.HP);
         console.log("%s has %s HP Left", bloater.name, bloater.HP);
+
+
+        require(bloater.HP > 0, "Bloater has no HP left!");
+        require(player.HP > 0, "Player has no HP left!");
+
+        if(bloater.HP < player.baseAttack){
+            bloater.HP = 0;
+        } else {
+            bloater.HP = bloater.HP - player.baseAttack;
+        }
+
+        if(player.HP < bloater.Attack){
+            player.HP = 0;
+        } else{
+            player.HP = player.HP - bloater.Attack;
+        }
+
+        console.log("%s attacked bloater! Bloater HP: %s", player.name, bloater.HP);
+        console.log("bloater attacked %s! %s HP: %s", player.name, player.name, player.HP);
 
 
     }
