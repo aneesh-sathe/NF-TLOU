@@ -1,5 +1,5 @@
 const main = async () => {
-  const gameContractFactory = await hre.ethers.getContractFactory("Game.sol");
+  const gameContractFactory = await hre.ethers.getContractFactory("Game");
   const gameContract = await gameContractFactory.deploy(
     ["Joel", "Ellie", "Bill"],
     [process.env.JOEL, process.env.ELLIE, process.env.BILL],
