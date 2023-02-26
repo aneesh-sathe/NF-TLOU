@@ -15,4 +15,22 @@ const main = async () => {
   await gameContract.deployed();
 
   console.log("contract deployed to -> ", gameContract.address);
+
+  let txn;
+
+  txn = await gameContract.mintNFT(1);
+  await txn.wait();
+
+  txn = await gameContract.attack();
+  await txn.wait();
 };
+
+const run = async () => {
+  try {
+    await main();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+run();
