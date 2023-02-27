@@ -21,6 +21,9 @@ const main = async () => {
   txn = await gameContract.mintNFT(1);
   await txn.wait();
 
+  txn = await gameContract.mintNFT(0);
+  await txn.wait();
+
   txn = await gameContract.attack();
   await txn.wait();
 };

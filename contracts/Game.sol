@@ -81,6 +81,9 @@ contract Game is ERC721{
         _tokenID.increment();
     }
 
+    event mintedNFT(address sender, uint256 tokenID, uint256 avatarIndex);
+    event attackLanded(address sender, uint256 bloaterHP, uint256 playerHP);
+
     function mintNFT(uint _index) external {
         uint256 nftID = _tokenID.current();
         _safeMint(msg.sender, nftID);
@@ -98,6 +101,7 @@ contract Game is ERC721{
         console.log("Minted NFT w/ tokenId %s and characterIndex %s", nftID, _index);
         nftHolders[msg.sender].push(nftID);
         _tokenID.increment();
+        emit mintedNFT(msg.sender, nftID, _index);
     }
 
     function tokenURI(uint256 _tokenID) public view override returns(string memory){
@@ -133,6 +137,26 @@ contract Game is ERC721{
         return uint(keccak256(abi.encodePacked(block.timestamp, block.gaslimit, flag ))) % _div;
 
     }
+
+
+    function checkNFT() public view returns(avatarAttributes memory){
+        uint256 userNFT = nftHolders[msg.sender][0];
+        if(userNFT > 0){
+            return nftHolderAttributes[userNFT];
+        } else {
+            avatarAttributes memory empty;
+            return empty;
+        }
+    }
+
+    function getCharacter() public view returns(avatarAttributes[] memory){
+        return defaultAvatar;
+    }
+
+    function getBloater() public view returns(Bloater memory){
+        return bloater;
+    }
+
 
     function attack() public {
 
@@ -174,7 +198,7 @@ contract Game is ERC721{
             
         }
 
-
+        emit attackLanded(msg.sender, bloater.HP, player.HP);
 
     }
 }
