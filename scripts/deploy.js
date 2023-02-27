@@ -7,7 +7,7 @@ const main = async () => {
     [100, 50, 150],
     [200, 100, 500],
     "Bloater",
-    "https://imgur.com/a/fz4CU6X",
+    "https://i.imgur.com/85TORKS.jpeg",
     10000,
     100
   );
